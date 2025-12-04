@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🇨🇳 Does this originate in China?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .header {
+            background: #d32f2f;
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+        }
+        input {
+            width: 70%;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .result {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        .yes { color: green; }
+        .no { color: red; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🇨🇳 Does this originate in China?</h1>
+        <p>Проверяем происхождение всего</p>
+    </div>
+    
+    <div class="search-box">
+        <input type="text" id="query" placeholder="Введите слово: лапша, кимчи, бумага...">
+        <button onclick="checkOrigin()">Проверить</button>
+        
+        <div style="margin-top: 15px;">
+            <strong>Примеры:</strong>
+            <span onclick="checkExample('лапша')" style="cursor:pointer;color:#d32f2f;margin:0 10px;">🍜 лапша</span>
+            <span onclick="checkExample('кимчи')" style="cursor:pointer;color:#d32f2f;margin:0 10px;">🇰🇷 кимчи</span>
+            <span onclick="checkExample('бумага')" style="cursor:pointer;color:#d32f2f;margin:0 10px;">📜 бумага</span>
+            <span onclick="checkExample('чай')" style="cursor:pointer;color:#d32f2f;margin:0 10px;">🍵 чай</span>
+        </div>
+    </div>
+    
+    <div class="result" id="result">
+        <h2 id="resultTitle"></h2>
+        <p id="resultText"></p>
+        <p id="historyNote"></p>
+    </div>
+
+    <script>
+        const database = {
+            "лапша": {answer: "ДА", reason: "Изобретена в Китае 4000 лет назад", note: "Древнейшая находка в Лацзя"},
+            "кимчи": {answer: "НЕТ", reason: "Корейское блюдо", note: "Упоминается с I века в Корее"},
+            "бумага": {answer: "ДА", reason: "Изобретена в Китае во II веке до н.э.", note: "Цай Лунь усовершенствовал технологию"},
+            "чай": {answer: "ДА", reason: "Культивируется в Китае 3000 лет", note: "Первые упоминания в 59 году до н.э."},
+            "паста": {answer: "ВЕРОЯТНО НЕТ", reason: "Итальянское блюдо", note: "Но корни в китайской лапше"},
+            "порох": {answer: "ДА", reason: "Изобретен в Китае в IX веке", note: "Использовался для фейерверков"},
+            "компас": {answer: "ДА", reason: "Изобретен в Китае", note: "Первые упоминания в IV веке до н.э."},
+            "шёлк": {answer: "ДА", reason: "Производился в Китае с древности", note: "Секрет хранился 3000 лет"},
+            "пицца": {answer: "НЕТ", reason: "Итальянское блюдо", note: "Появилась в Неаполе"},
+            "самурай": {answer: "НЕТ", reason: "Японское явление", note: "Появились в период Хэйан"}
+        };
+
+        function checkOrigin() {
+            const query = document.getElementById('query').value.toLowerCase().trim();
+            const resultDiv = document.getElementById('result');
+            const title = document.getElementById('resultTitle');
+            const text = document.getElementById('resultText');
+            const note = document.getElementById('historyNote');
+            
+            if (!query) {
+                alert("Введите слово для проверки!");
+                return;
+            }
+            
+            let found = false;
+            for (const [key, value] of Object.entries(database)) {
+                if (query === key.toLowerCase()) {
+                    title.innerHTML = `<span class="${value.answer === 'ДА' ? 'yes' : 'no'}">${value.answer === 'ДА' ? '✅ ДА' : value.answer === 'НЕТ' ? '❌ НЕТ' : '⚠️ ' + value.answer}</span>`;
+                    text.textContent = value.reason;
+                    note.textContent = value.note;
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (!found) {
+                title.innerHTML = '<span class="no">❓ НЕИЗВЕСТНО</span>';
+                text.textContent = 'Слово не найдено в базе знаний';
+                note.textContent = 'Попробуйте проверить другое слово';
+            }
+            
+            resultDiv.style.display = 'block';
+        }
+        
+        function checkExample(word) {
+            document.getElementById('query').value = word;
+            checkOrigin();
+        }
+        
+        // Автозапуск для примера
+        window.onload = function() {
+            document.getElementById('query').value = 'лапша';
+            setTimeout(checkOrigin, 500);
+        };
+    </script>
+    
+    <div style="text-align:center;margin-top:30px;color:#666;font-size:14px;">
+        <p>© 2024 China Origin Checker | Сайт работает на GitHub Pages</p>
+    </div>
+</body>
+</html>
